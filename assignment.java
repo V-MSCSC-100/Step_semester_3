@@ -1,23 +1,19 @@
 //Question 1
+
 public class Main {
 
-    static class EventTicket {
-        protected String attendeeId;
-        protected double basePrice;
+    static class RaceEntry {
+        protected String bibNumber;
+        protected double entryFee;
         protected double amountPaid;
 
-        public EventTicket(String attendeeId, double basePrice) {
-
-            if (attendeeId == null ||
-                attendeeId.trim().length() < 4) {
-
-                throw new IllegalArgumentException(
-                    "Invalid attendee ID"
-                );
+        public RaceEntry(String bibNumber, double entryFee) {
+            if (bibNumber == null || bibNumber.trim().length() < 4) {
+                throw new IllegalArgumentException("Invalid bib number");
             }
 
-            this.attendeeId = attendeeId;
-            this.basePrice = basePrice;
+            this.bibNumber = bibNumber;
+            this.entryFee = entryFee;
             this.amountPaid = 0;
         }
 
@@ -26,84 +22,51 @@ public class Main {
         }
 
         public double getBalanceDue() {
-            return basePrice - amountPaid;
+            return entryFee - amountPaid;
         }
     }
 
-    static class WorkshopTicket extends EventTicket {
+    static class RunnerEntry extends RaceEntry {
+        private String category;
 
-        private String track;
-
-        public WorkshopTicket(
-            String attendeeId,
-            double basePrice,
-            String track
-        ) {
-            super(attendeeId, basePrice);
-            this.track = track;
-        }
-
-        public String getTrack() {
-            return track;
+        public RunnerEntry(String bibNumber, double entryFee, String category) {
+            super(bibNumber, entryFee);
+            this.category = category;
         }
     }
 
-    static String registerBatch(
-        String[] attendeeIds,
-        double basePrice
-    ) {
-
+    static String registerBatch(String[] bibNumbers, double entryFee) {
         int registered = 0;
         int rejected = 0;
 
-        for (String id : attendeeIds) {
-
+        for (String bib : bibNumbers) {
             try {
-                new EventTicket(id, basePrice);
+                new RaceEntry(bib, entryFee);
                 registered++;
-            }
-            catch (IllegalArgumentException e) {
+            } catch (IllegalArgumentException e) {
                 rejected++;
             }
         }
 
-        return "Registered: " + registered +
-               " | Rejected: " + rejected;
+        return "Registered: " + registered + " | Rejected: " + rejected;
     }
 
     public static void main(String[] args) {
 
-        EventTicket ticket =
-            new EventTicket("USER1001", 500);
+        try {
+            RaceEntry r1 = new RaceEntry("B1", 50);
+        } catch (IllegalArgumentException e) {
+            System.out.println("construction rejected");
+        }
 
-        ticket.pay(200);
+        RunnerEntry r = new RunnerEntry("BIB2001", 80, "Open 10K");
+        r.pay(30);
 
-        System.out.println(
-            "Balance: " + ticket.getBalanceDue()
-        );
+        System.out.println(r.getBalanceDue());
 
-        WorkshopTicket workshop =
-            new WorkshopTicket(
-                "USER2001",
-                1000,
-                "Java"
-            );
+        String[] bibNumbers = {"BIB1", "B1", "BIB2"};
 
-        System.out.println(
-            "Track: " + workshop.getTrack()
-        );
-
-        String[] ids = {
-            "USER1",
-            "AB",
-            "USER2",
-            null,
-            "USER3"
-        };
-
-        System.out.println(
-            registerBatch(ids, 500)
-        );
+        System.out.println(registerBatch(bibNumbers, 80));
     }
 }
 
@@ -111,27 +74,18 @@ public class Main {
 
 public class Main {
 
-    static class EventTicket {
-
-        protected String attendeeId;
-        protected double basePrice;
+    static class RaceEntry {
+        protected String bibNumber;
+        protected double entryFee;
         protected double amountPaid;
 
-        public EventTicket(
-            String attendeeId,
-            double basePrice
-        ) {
-
-            if (attendeeId == null ||
-                attendeeId.trim().length() < 4) {
-
-                throw new IllegalArgumentException(
-                    "Invalid attendee ID"
-                );
+        public RaceEntry(String bibNumber, double entryFee) {
+            if (bibNumber == null || bibNumber.trim().length() < 4) {
+                throw new IllegalArgumentException("Invalid bib number");
             }
 
-            this.attendeeId = attendeeId;
-            this.basePrice = basePrice;
+            this.bibNumber = bibNumber;
+            this.entryFee = entryFee;
             this.amountPaid = 0;
         }
 
@@ -140,151 +94,112 @@ public class Main {
         }
 
         public double getBalanceDue() {
-            return basePrice - amountPaid;
+            return entryFee - amountPaid;
         }
 
-        public void printTicket() {
-
+        public void announce() {
             System.out.println(
-                "Event Ticket | Attendee: " +
-                attendeeId +
-                " | Balance: " +
-                getBalanceDue()
+                "Race Entry | Bib: " + bibNumber +
+                " | Balance: " + getBalanceDue()
             );
         }
     }
 
-    static class WorkshopTicket
-        extends EventTicket {
+    static class RunnerEntry extends RaceEntry {
+        protected String category;
 
-        protected String track;
-
-        public WorkshopTicket(
-            String attendeeId,
-            double basePrice,
-            String track
+        public RunnerEntry(
+            String bibNumber,
+            double entryFee,
+            String category
         ) {
-            super(attendeeId, basePrice);
-            this.track = track;
+            super(bibNumber, entryFee);
+            this.category = category;
         }
 
         @Override
-        public void printTicket() {
-
+        public void announce() {
             System.out.println(
-                "Workshop Ticket | Attendee: " +
-                attendeeId +
-                " | Track: " +
-                track +
-                " | Balance: " +
-                getBalanceDue()
+                "Runner Entry | Bib: " + bibNumber +
+                " | Category: " + category +
+                " | Balance: " + getBalanceDue()
             );
         }
     }
 
-    static class PremiumWorkshopTicket
-        extends WorkshopTicket {
+    static class EliteRunnerEntry extends RunnerEntry {
+        private double sponsorBonus;
 
-        private double kitFee;
-
-        public PremiumWorkshopTicket(
-            String attendeeId,
-            double basePrice,
-            String track,
-            double kitFee
+        public EliteRunnerEntry(
+            String bibNumber,
+            double entryFee,
+            String category,
+            double sponsorBonus
         ) {
-
-            super(
-                attendeeId,
-                basePrice,
-                track
-            );
-
-            this.kitFee = kitFee;
+            super(bibNumber, entryFee, category);
+            this.sponsorBonus = sponsorBonus;
         }
 
         @Override
-        public void printTicket() {
-
+        public void announce() {
             System.out.println(
-                "Premium Workshop Ticket | " +
-                "Attendee: " + attendeeId +
-                " | Track: " + track +
-                " | Kit Fee: " + kitFee +
-                " | Balance: " +
-                getBalanceDue()
+                "Elite Runner | Bib: " + bibNumber +
+                " | Category: " + category +
+                " | Sponsor Bonus: " + sponsorBonus +
+                " | Balance: " + getBalanceDue()
             );
         }
     }
 
-    static class HackathonTicket
-        extends EventTicket {
+    static class RelayTeamEntry extends RaceEntry {
+        private int teamSize;
 
-        private String teamName;
-
-        public HackathonTicket(
-            String attendeeId,
-            double basePrice,
-            String teamName
+        public RelayTeamEntry(
+            String bibNumber,
+            double entryFee,
+            int teamSize
         ) {
+            super(bibNumber, entryFee);
+            this.teamSize = teamSize;
+        }
 
-            super(
-                attendeeId,
-                basePrice
-            );
-
-            this.teamName = teamName;
+        public int getTeamSize() {
+            return teamSize;
         }
 
         @Override
-        public void printTicket() {
-
+        public void announce() {
             System.out.println(
-                "Hackathon Ticket | " +
-                "Attendee: " + attendeeId +
-                " | Team: " + teamName +
-                " | Balance: " +
-                getBalanceDue()
+                "Relay Team | Bib: " + bibNumber +
+                " | Team Size: " + teamSize +
+                " | Balance: " + getBalanceDue()
             );
         }
     }
 
-    static String classifyGeneration(
-        EventTicket ticket
-    ) {
+    static String classifyGeneration(RaceEntry entry) {
 
-        if (ticket instanceof
-            PremiumWorkshopTicket) {
-
-            return "Multilevel descendant " +
-                   "(3 generations deep)";
+        if (entry instanceof EliteRunnerEntry) {
+            return "Multilevel descendant (3 generations deep)";
         }
 
-        if (ticket instanceof
-            HackathonTicket) {
-
-            return "Hierarchical sibling " +
-                   "(independent branch)";
+        if (entry instanceof RelayTeamEntry) {
+            return "Hierarchical sibling (independent branch)";
         }
 
-        if (ticket instanceof
-            WorkshopTicket) {
-
+        if (entry instanceof RunnerEntry) {
             return "Intermediate descendant";
         }
 
-        return "Standard Event Ticket";
+        return "Standard Race Entry";
     }
 
-    static double getTotalBalanceDue(
-        EventTicket[] tickets
-    ) {
+    static double getTotalBalanceDue(RaceEntry[] entries) {
 
         double total = 0;
 
-        for (EventTicket ticket : tickets) {
-
-            total += ticket.getBalanceDue();
+        for (RaceEntry entry : entries) {
+            total += entry.getBalanceDue();
         }
 
         return total;
@@ -292,57 +207,44 @@ public class Main {
 
     public static void main(String[] args) {
 
-        EventTicket event =
-            new EventTicket(
-                "USER1001",
+        RunnerEntry runnerEntry =
+            new RunnerEntry("BIB2001", 80, "Open 10K");
+
+        EliteRunnerEntry eliteEntry =
+            new EliteRunnerEntry(
+                "BIB3001",
+                150,
+                "Elite Full Marathon",
                 500
             );
 
-        WorkshopTicket workshop =
-            new WorkshopTicket(
-                "USER2001",
-                1000,
-                "Java"
+        RelayTeamEntry relayEntry =
+            new RelayTeamEntry(
+                "BIB4001",
+                300,
+                4
             );
 
-        PremiumWorkshopTicket premium =
-            new PremiumWorkshopTicket(
-                "USER3001",
-                1500,
-                "AI",
-                300
-            );
-
-        HackathonTicket hackathon =
-            new HackathonTicket(
-                "USER4001",
-                800,
-                "Code Warriors"
-            );
-
-        event.printTicket();
-        workshop.printTicket();
-        premium.printTicket();
-        hackathon.printTicket();
+        runnerEntry.announce();
+        eliteEntry.announce();
+        relayEntry.announce();
 
         System.out.println(
-            classifyGeneration(premium)
+            classifyGeneration(eliteEntry)
         );
 
         System.out.println(
-            classifyGeneration(hackathon)
+            classifyGeneration(relayEntry)
         );
 
-        EventTicket[] tickets = {
-            event,
-            workshop,
-            premium,
-            hackathon
+        RaceEntry[] entries = {
+            runnerEntry,
+            eliteEntry,
+            relayEntry
         };
 
         System.out.println(
-            "Total Balance Due: " +
-            getTotalBalanceDue(tickets)
+            getTotalBalanceDue(entries)
         );
     }
 }
@@ -353,30 +255,25 @@ import java.util.Arrays;
 
 public class Main {
 
-    static class EventTicket {
+    static class RaceEntry {
 
-        protected double basePrice;
+        protected double entryFee;
         protected double amountPaid;
 
-        private double[] lateFeeHistory =
-            new double[10];
-
+        private double[] lateFeeHistory = new double[10];
         private int feeCount = 0;
 
-        public EventTicket(double basePrice) {
-
-            this.basePrice = basePrice;
+        public RaceEntry(double entryFee) {
+            this.entryFee = entryFee;
             this.amountPaid = 0;
         }
 
         public void pay(double amount) {
-
             amountPaid += amount;
         }
 
         public double getBalanceDue() {
-
-            return basePrice - amountPaid;
+            return entryFee - amountPaid;
         }
 
         protected void applyLateFee(double amount) {
@@ -384,73 +281,41 @@ public class Main {
             amountPaid -= amount;
 
             lateFeeHistory[feeCount] = amount;
-
             feeCount++;
         }
 
         public double[] getLateFeeHistory() {
-
-            return Arrays.copyOf(
-                lateFeeHistory,
-                feeCount
-            );
+            return Arrays.copyOf(lateFeeHistory, feeCount);
         }
     }
 
-    static class WorkshopTicket
-        extends EventTicket {
+    static class RunnerEntry extends RaceEntry {
 
-        public WorkshopTicket(
-            double basePrice
-        ) {
-            super(basePrice);
+        public RunnerEntry(double entryFee) {
+            super(entryFee);
         }
 
         @Override
-        protected void applyLateFee(
-            double amount
-        ) {
-
-            super.applyLateFee(
-                amount * 2
-            );
+        protected void applyLateFee(double amount) {
+            super.applyLateFee(amount * 2);
         }
     }
 
     public static void main(String[] args) {
 
-        WorkshopTicket ticket =
-            new WorkshopTicket(1000);
+        RunnerEntry r = new RunnerEntry(80);
 
-        ticket.pay(1000);
+        r.pay(30);
 
-        System.out.println(
-            "Before late fee: " +
-            ticket.getBalanceDue()
-        );
+        r.applyLateFee(20);
 
-        ticket.applyLateFee(100);
+        System.out.println(r.getBalanceDue());
 
-        System.out.println(
-            "After late fee: " +
-            ticket.getBalanceDue()
-        );
+        double[] history = r.getLateFeeHistory();
 
-        double[] history =
-            ticket.getLateFeeHistory();
+        history[0] = 999;
 
-        System.out.println(
-            "Original history: " +
-            Arrays.toString(history)
-        );
-        history[0] = 9999;
-
-        System.out.println(
-            "Internal history: " +
-            Arrays.toString(
-                ticket.getLateFeeHistory()
-            )
-        );
+        System.out.println(Arrays.toString(r.getLateFeeHistory()));
     }
 }
 
@@ -458,136 +323,133 @@ public class Main {
 
 public class Main {
 
-    static class EventTicket {
+    static class RaceEntry {
 
-        protected String attendeeId;
-        protected double basePrice;
+        protected String bibNumber;
+        protected double entryFee;
         protected double amountPaid;
 
-        public EventTicket(
-            String attendeeId,
-            double basePrice
-        ) {
-
-            this.attendeeId = attendeeId;
-            this.basePrice = basePrice;
+        public RaceEntry(String bibNumber, double entryFee) {
+            this.bibNumber = bibNumber;
+            this.entryFee = entryFee;
             this.amountPaid = 0;
         }
 
-        public void pay(double amount) {
-            amountPaid += amount;
-        }
-
         public double getBalanceDue() {
-            return basePrice - amountPaid;
+            return entryFee - amountPaid;
         }
 
-        public void printTicket() {
-
+        public void announce() {
             System.out.print(
-                "Event Ticket | Attendee: " +
-                attendeeId +
-                " | Balance: " +
-                getBalanceDue() +
+                "Race Entry | Bib: " + bibNumber +
+                " | Balance: " + getBalanceDue() +
                 " | "
             );
         }
     }
 
-    static class WorkshopTicket
-        extends EventTicket {
+    static class RunnerEntry extends RaceEntry {
 
-        private String track;
+        private String category;
 
-        public WorkshopTicket(
-            String attendeeId,
-            double basePrice,
-            String track
+        public RunnerEntry(
+            String bibNumber,
+            double entryFee,
+            String category
         ) {
-
-            super(
-                attendeeId,
-                basePrice
-            );
-
-            this.track = track;
-        }
-
-        public String getTrack() {
-            return track;
+            super(bibNumber, entryFee);
+            this.category = category;
         }
 
         @Override
-        public void printTicket() {
-
+        public void announce() {
             System.out.print(
-                "Workshop Ticket | Attendee: " +
-                attendeeId +
-                " | Track: " +
-                track +
-                " | Balance: " +
-                getBalanceDue() +
+                "Runner Entry | Bib: " + bibNumber +
+                " | Category: " + category +
+                " | Balance: " + getBalanceDue() +
                 " | "
             );
         }
     }
 
-    static String batchPrint(
-        EventTicket[] tickets
-    ) {
+    static class RelayTeamEntry extends RaceEntry {
 
-        StringBuilder result =
-            new StringBuilder();
+        private int teamSize;
 
-        for (EventTicket ticket : tickets) {
+        public RelayTeamEntry(
+            String bibNumber,
+            double entryFee,
+            int teamSize
+        ) {
+            super(bibNumber, entryFee);
+            this.teamSize = teamSize;
+        }
 
-     
-            ticket.printTicket();
+        public int getTeamSize() {
+            return teamSize;
+        }
 
+        @Override
+        public void announce() {
+            System.out.print(
+                "Relay Team | Bib: " + bibNumber +
+                " | Team Size: " + teamSize +
+                " | Balance: " + getBalanceDue() +
+                " | "
+            );
+        }
+    }
 
-            if (ticket instanceof
-                WorkshopTicket) {
+    static String announceAll(RaceEntry[] entries) {
 
-                WorkshopTicket workshop =
-                    (WorkshopTicket) ticket;
+        StringBuilder sb = new StringBuilder();
 
-                result.append(
-                    "[Track via downcast: "
+        for (RaceEntry entry : entries) {
+
+            // Polymorphism
+            entry.announce();
+
+            // Safe downcasting
+            if (entry instanceof RelayTeamEntry) {
+
+                RelayTeamEntry relay =
+                    (RelayTeamEntry) entry;
+
+                sb.append(
+                    "[Team size via downcast: "
                 );
 
-                result.append(
-                    workshop.getTrack()
-                );
+                sb.append(relay.getTeamSize());
 
-                result.append("] | ");
+                sb.append("] | ");
             }
         }
 
-        return result.toString();
+        return sb.toString();
     }
 
     public static void main(String[] args) {
 
-        EventTicket event =
-            new EventTicket(
-                "USER1001",
-                500
+        RunnerEntry runnerEntry =
+            new RunnerEntry(
+                "BIB2001",
+                80,
+                "Open 10K"
             );
 
-        WorkshopTicket workshop =
-            new WorkshopTicket(
-                "USER2001",
-                1000,
-                "Java"
+        RelayTeamEntry relayEntry =
+            new RelayTeamEntry(
+                "BIB4001",
+                300,
+                4
             );
 
-        EventTicket[] tickets = {
-            event,
-            workshop
+        RaceEntry[] fleet = {
+            runnerEntry,
+            relayEntry
         };
 
-        String result =
-            batchPrint(tickets);
+        String result = announceAll(fleet);
 
         System.out.println();
         System.out.println(result);
@@ -598,245 +460,163 @@ public class Main {
 
 public class Main {
 
-    static class EventTicket {
+    static class RaceEntry {
 
-        private static int counter = 1000;
+        private static int counter = 0;
 
-        final String ticketId;
+        final String entryCode;
 
-        protected double basePrice;
+        protected double entryFee;
         protected double amountPaid;
 
-        public EventTicket(
-            double basePrice
-        ) {
+        public RaceEntry(String bibNumber, double entryFee) {
 
             counter++;
 
-            ticketId =
-                "TCK-" + counter;
+            entryCode = "ENT-" + counter;
 
-            this.basePrice =
-                basePrice;
-
+            this.entryFee = entryFee;
             this.amountPaid = 0;
         }
 
         public void pay(double amount) {
-
             amountPaid += amount;
         }
 
-        public void pay(
-            double amount,
-            String mode
-        ) {
+        public void pay(double amount, String mode) {
 
-            System.out.println(
-                "Payment mode: " + mode
-            );
+            System.out.println("Paying via " + mode);
 
             pay(amount);
         }
 
         public double getBalanceDue() {
-
-            return basePrice -
-                   amountPaid;
+            return entryFee - amountPaid;
         }
 
-        public static boolean
-        isValidPromoCode(String code) {
+        public static boolean isValidDiscountCode(
+            String code
+        ) {
 
-            if (code == null ||
-                code.length() != 5) {
-
+            if (code == null || code.length() != 5) {
                 return false;
             }
 
-
-            if (code.charAt(0) != 'F') {
+            if (code.charAt(0) != 'M') {
                 return false;
             }
 
-            if (!Character.isDigit(
-                    code.charAt(1))) {
-
+            if (!Character.isDigit(code.charAt(1))) {
                 return false;
             }
 
-            if (!Character.isDigit(
-                    code.charAt(2))) {
-
+            if (!Character.isDigit(code.charAt(2))) {
                 return false;
             }
 
-            if (!Character.isDigit(
-                    code.charAt(3))) {
-
+            if (!Character.isDigit(code.charAt(3))) {
                 return false;
             }
 
-
-            if (!Character.isUpperCase(
-                    code.charAt(4))) {
-
+            if (!Character.isUpperCase(code.charAt(4))) {
                 return false;
             }
 
             return true;
         }
 
-        public static int
-        getTicketsIssued() {
-
-            return counter - 1000;
+        public static int getBibCounter() {
+            return counter;
         }
     }
 
-    static class GroupTicket
-        extends EventTicket {
+    static class RelayTeamEntry extends RaceEntry {
 
-        private int groupSize;
+        private int teamSize;
 
-        public GroupTicket(
-            double basePrice,
-            int groupSize
+        public RelayTeamEntry(
+            String bibNumber,
+            double entryFee,
+            int teamSize
         ) {
-
-            super(basePrice);
-
-            this.groupSize =
-                groupSize;
+            super(bibNumber, entryFee);
+            this.teamSize = teamSize;
         }
 
-        public int getGroupSize() {
-            return groupSize;
+        public int getTeamSize() {
+            return teamSize;
         }
     }
 
-    static String processNightlySettlement(
-        EventTicket[] tickets
-    ) {
+    static String settleNight(RaceEntry[] entries) {
 
         int processed = 0;
         int nullSkipped = 0;
-        int group = 0;
+        int relay = 0;
         int individual = 0;
 
-        for (EventTicket ticket : tickets) {
+        for (RaceEntry entry : entries) {
 
-            if (ticket == null) {
-
+            if (entry == null) {
                 nullSkipped++;
-
                 continue;
             }
 
             processed++;
 
-            if (ticket instanceof
-                GroupTicket) {
-
-                group++;
-
+            if (entry instanceof RelayTeamEntry) {
+                relay++;
             } else {
-
                 individual++;
             }
         }
 
-        return processed +
-               " processed | " +
-               nullSkipped +
-               " null skipped | " +
-               group +
-               " group | " +
-               individual +
-               " individual";
+        return processed + " processed | " +
+               nullSkipped + " null skipped | " +
+               relay + " relay | " +
+               individual + " individual";
     }
 
     public static void main(String[] args) {
 
-        EventTicket ticket1 =
-            new EventTicket(1000);
+        RaceEntry r1 =
+            new RaceEntry("BIB1001", 100);
 
-        EventTicket ticket2 =
-            new EventTicket(1500);
-
-        GroupTicket groupTicket =
-            new GroupTicket(
-                3000,
-                5
+        RelayTeamEntry relay =
+            new RelayTeamEntry(
+                "BIB2001",
+                300,
+                4
             );
 
-        System.out.println(
-            "Ticket 1: " +
-            ticket1.ticketId
-        );
+        System.out.println(r1.entryCode);
 
         System.out.println(
-            "Ticket 2: " +
-            ticket2.ticketId
+            RaceEntry.getBibCounter()
         );
 
         System.out.println(
-            "Group Ticket: " +
-            groupTicket.ticketId
+            RaceEntry.isValidDiscountCode("M123A")
         );
 
         System.out.println(
-            "Tickets issued: " +
-            EventTicket.getTicketsIssued()
-        );
-
-        ticket1.pay(500);
-
-        ticket2.pay(
-            700,
-            "UPI"
+            RaceEntry.isValidDiscountCode("M12A")
         );
 
         System.out.println(
-            "Ticket 1 balance: " +
-            ticket1.getBalanceDue()
+            RaceEntry.isValidDiscountCode("X123A")
         );
 
-        System.out.println(
-            "Ticket 2 balance: " +
-            ticket2.getBalanceDue()
-        );
+        r1.pay(10, "UPI");
 
-
-        System.out.println(
-            EventTicket.isValidPromoCode(
-                "F123A"
-            )
-        );
-
-        System.out.println(
-            EventTicket.isValidPromoCode(
-                "F12AB"
-            )
-        );
-
-        System.out.println(
-            EventTicket.isValidPromoCode(
-                "X123A"
-            )
-        );
-
-        EventTicket[] tickets = {
-            ticket1,
-            ticket2,
-            groupTicket,
-            null
+        RaceEntry[] entries = {
+            r1,
+            null,
+            relay
         };
 
         System.out.println(
-            processNightlySettlement(
-                tickets
-            )
+            settleNight(entries)
         );
     }
 }
