@@ -132,3 +132,6 @@ inheritance, and interface relationships; object diagrams for showing
 specific runtime objects and their current values; and sequence diagrams
 for showing the order of method calls and interactions between objects
 over time.
+
+In Week 8, I learned about Object-Oriented Programming and system design using Java, focusing on abstraction, interfaces, inheritance, polymorphism, encapsulation, data hiding, composition, and object relationships. I learned how to design extensible systems using interfaces and abstract classes, maintain valid object states through controlled state transitions and invariants, and use composition instead of excessive inheritance. I also learned UML concepts such as class diagrams, sequence diagrams, state diagrams, activity diagrams, relationships, and multiplicities. I applied these concepts by designing systems for online examinations, vehicle rentals, hotel bookings, employee leave management, food ordering and payments, hackathon management, parcel tracking, smart lab control, elective enrollment, and smart-card management.
+
