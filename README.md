@@ -144,3 +144,7 @@ In Week 9, I have learned fundamental Data Structures and Algorithms concepts in
 Week 10 --- Implementation of Linked Lists
 
 In Week 10, I learned how to implement linked lists in Java using classes and objects, including the creation of nodes, storing data, and connecting nodes using references. I understood how to perform basic linked-list operations such as insertion at the beginning and end, deletion of nodes, and traversing the list to display elements. I also learned about singly linked lists, doubly linked lists, and circular linked lists, understanding how their structures differ and how pointers or references are used to connect nodes dynamically.
+
+Week 11 --- Continuation of Linked Lists
+
+In Week 11, I learned about linked lists and circular data structures using Java. I practised linked list insertion, deletion, traversal, reversal, palindrome checking, removing the N-th node from the end, adding numbers represented by linked lists, finding intersection nodes, and reordering lists using fast and slow pointer techniques. I also studied circular linked lists, cycle detection using Floyd's algorithm, dummy nodes, pointer manipulation, and memory management. Additionally, I implemented a Bus Bay Ring using a fixed-size circular array and practised deque operations such as insertion and deletion at both ends, retrieving front and rear elements, and checking whether the structure is full or empty. These exercises helped me understand efficient algorithms, modulo-based indexing, and time and space complexity analysis, among other programs.
