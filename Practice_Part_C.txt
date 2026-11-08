@@ -1,0 +1,68 @@
+1. Compare Singly and Doubly Linked Lists
+A singly linked list contains nodes with data and one pointer pointing to the next node. A doubly linked list contains data and two pointers, one pointing to the previous node and another pointing to the next node.
+Singly linked lists require less memory and support forward traversal. Doubly linked lists require more memory but support traversal in both directions. Insertion and deletion are easier in doubly linked lists when the target node is already known.
+A doubly linked list is preferred in applications such as browser history, undo-redo operations and music playlists, where forward and backward navigation is required.
+
+2. Compare Cycle Detection Techniques
+Floyd's cycle detection algorithm uses two pointers moving at different speeds. The slow pointer moves one step, while the fast pointer moves two steps. If a cycle exists, both pointers eventually meet.
+- Fast and slow pointers: O(n) time and O(1) space.
+- Hash set: O(n) time and O(n) space.
+The mathematical intuition is that the fast pointer gains one node over the slow pointer during every iteration. Inside a cycle, this distance eventually becomes zero modulo the cycle length, causing both pointers to meet.
+
+3. Merging Two Sorted Linked Lists
+Two sorted linked lists can be merged by comparing their current nodes and connecting the smaller node to the result list. Move the corresponding pointer forward and repeat until one list becomes empty. Finally, connect the remaining nodes.
+This method modifies existing pointers without creating additional nodes.
+Time complexity: O(m+n).
+Space complexity: O(1).
+Unlike arrays, which generally require allocating a new array for the merged result, linked lists reuse existing nodes, reducing additional memory requirements.
+
+4. Importance of Dummy Nodes
+A dummy node is an extra node placed before the actual head of a linked list. It simplifies insertion and deletion operations by providing a fixed starting point.
+For example, deleting the first node normally requires changing the head pointer separately. With a dummy node, the first actual node can be deleted using the same pointer manipulation used for other nodes.
+This reduces special conditions and makes the code simpler.
+5. Null Reference Exceptions
+Two common situations that cause null-reference exceptions are:
+1. Accessing current->next->data when current->next is NULL. This happens when accessing a node beyond the end of the list.
+2. Accessing head->data when the list is empty and head is NULL.
+These errors can be prevented by checking pointers before accessing their fields.
+For example:
+if (current && current->next)
+    printf("%d", current->next->data);
+Always validate pointers before dereferencing them.
+
+6. Pointer Variables in Linked List Reversal
+Three pointers are used in iterative linked list reversal:
+- prev: Stores the previous node.
+- current: Stores the node currently being processed.
+- next: Temporarily stores the next node.
+During each iteration, save the next node, reverse the current node's pointer, move prev forward and then move current forward.
+If the next pointer is not saved before modifying current->next, the remaining portion of the linked list becomes unreachable, resulting in loss of access to those nodes.
+
+7. Insertion in the Middle of a Linked List
+Insertion in a linked list takes O(1) time when the pointer to the node after which insertion must happen is already available.
+Only two pointer assignments are required:
+newNode->next = current->next;
+current->next = newNode;
+However, finding the required middle position requires O(n) traversal time.
+Therefore, the overall insertion operation is generally O(n).
+In arrays, insertion may require shifting elements, which also takes O(n) time. However, arrays provide faster random access through indexing.
+
+8. Circular Linked List
+A circular linked list is a linked list in which the last node points back to the first node instead of pointing to NULL.
+A practical application is round-robin CPU scheduling, where processes are executed repeatedly in a circular order.
+A common traversal mistake is using:
+while (current != NULL)
+Since the last node points back to the first node, current never becomes NULL. This causes an infinite loop.
+Traversal should instead stop when the pointer returns to the starting node.
+
+9. Why Linked Lists Are Slower Than Arrays
+Arrays store elements in contiguous memory locations, whereas linked list nodes can be stored at different memory locations.
+Arrays provide better CPU cache utilization because consecutive elements are usually loaded together into cache. Linked lists have poor cache locality because accessing the next node requires following a pointer to another memory location.
+This increases memory access time and cache misses.
+Therefore, arrays are often faster than linked lists during traversal, even though both have O(n) time complexity.
+
+10. Memory Management in Linked Lists
+When a node is deleted from a linked list, it becomes unreachable from the head pointer.
+In languages such as Java, automatic garbage collection identifies unreachable objects and releases their memory when appropriate.
+In languages such as C, memory must be manually released using free() after unlinking the node.
+If memory is not released, memory leaks occur. Repeated memory leaks can consume available memory and reduce application performance or cause the program to fail.
