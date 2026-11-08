@@ -1,0 +1,10 @@
+1) B – Assign newNode->next = node->next first, then node->next = newNode.
+2) C – Employing two pointers moving at different speeds (Floyd's cycle detection).
+3) D – Approximately at the middle of the list.
+4) C – O(1) constant space.
+5) D – O(1) constant space.
+6) C – Simplifies edge cases where the head node changes.
+7) B – A singly linked list.
+8) C – O(m+n) time and O(m) space.
+9) C – The remaining portion of the list becomes unreachable.
+10) C – A runtime error such as NullPointerException occurs.
